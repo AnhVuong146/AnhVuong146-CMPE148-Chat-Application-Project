@@ -1,47 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600&family=Vina+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
         integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
         crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>Chat Application</title>
 </head>
-
 <body>
-    <div class="messages">
+    <header>JAR Chat Application</header>
+    <div id="usernameInputContainer">
+        <input type="text" id="usernameInput" placeholder="Enter username" />
+        <button id="usernameSubmit">Join Chat</button>
+    </div>
+    <div class="chat-container" style="display:none;">
+        <div class="messages" id="messages"></div>
         <input placeholder="Message" id="messageInput" />
     </div>
 
     <script>
         const socket = io();
+        let username = '';
 
-        let messageContainer = document.querySelector(".messages");
-
+        document.getElementById('usernameSubmit').addEventListener('click', function() {
+            username = document.getElementById('usernameInput').value.trim();
+            if(username) {
+                document.getElementById('usernameInputContainer').style.display = 'none';
+                document.getElementsByClassName('chat-container')[0].style.display = 'flex';
+            } else {
+                alert('Please enter a username');
+            }
+        });
+    
+        let messageContainer = document.getElementById("messages");
+        let localMessageFlag = false; 
+    
         socket.on("connect", () => {
-            let p = document.createElement("p")
-            p.innerText = "You're connected"
-            messageContainer.appendChild(p)
+            displayMessage("Welcome to JAR Chat Application, you're connected!", new Date());
         })
-
+    
         let messageInput = document.getElementById("messageInput")
         messageInput.addEventListener("keypress", (e) => {
             if (e.which === 13) {
-                socket.emit("message", messageInput.value)
+                let messageData = { text: messageInput.value, user: username };
+                socket.emit("message", messageData);
+                localMessageFlag = true; 
+                displayMessage(messageData.text, new Date(), messageData.user);
                 messageInput.value = ""
             }
-        })
-
-        socket.on('message', (message) => {
-            let messageElement = document.createElement("p")
-            messageElement.innerText = message
-            messageContainer.appendChild(messageElement)
-        })
-
+        });
+    
+        socket.on('message', (data) => {
+            if (!localMessageFlag) {
+                displayMessage(data.text, new Date(), data.user);
+            }
+            localMessageFlag = false;
+        });
+    
+        function displayMessage(message, timestamp, user = "Server") {
+            let messageElement = document.createElement("div");
+            messageElement.classList.add("message");
+            messageElement.innerHTML = `<strong>${user}</strong>: ${message}`;
+        
+            let timeElement = document.createElement("div");
+            timeElement.classList.add("timestamp");
+            timeElement.innerText = timestamp.toLocaleTimeString();
+            
+            messageElement.appendChild(timeElement);
+            messageContainer.appendChild(messageElement);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
     </script>
+    
 </body>
-
 </html>
