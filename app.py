@@ -6,10 +6,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 @socketio.on("message")
-def sendMessage(message):
-    send(message, broadcast=True)
-    # send() function will emit a message vent by default
-
+def sendMessage(data):
+    send(data, broadcast=True)
 
 @app.route("/")
 def message():
