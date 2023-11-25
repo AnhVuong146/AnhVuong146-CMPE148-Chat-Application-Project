@@ -25,9 +25,14 @@
     </div>
 
     <script>
+        {% comment %} This line initializes a new Socket.IO client. 
+        It establishes a WebSocket connection between the client (browser) and the server, 
+        enabling real-time bidirectional communication. {% endcomment %}
         const socket = io();
         let username = '';
 
+        {% comment %} The script captures the username from an input field and hides the username 
+        input container upon submission. If no username is entered, it prompts the user with an alert. {% endcomment %}
         document.getElementById('usernameSubmit').addEventListener('click', function() {
             username = document.getElementById('usernameInput').value.trim();
             if(username) {
@@ -37,14 +42,23 @@
                 alert('Please enter a username');
             }
         });
-    
+
+        {% comment %} A reference to the HTML element where chat messages will be displayed. {% endcomment %}
         let messageContainer = document.getElementById("messages");
+
+        {% comment %} A flag used to prevent the local echoing of messages. It's set to true when a message is sent, 
+        and reset to false when a message is received. {% endcomment %}
         let localMessageFlag = false; 
-    
+
+        {% comment %} This listener is triggered when the client successfully connects to the server via Socket.IO. 
+        It displays a welcome message in the chat. {% endcomment %}
         socket.on("connect", () => {
             displayMessage("Welcome to JAR Chat Application, you're connected!", new Date());
         })
-    
+
+        {% comment %} Listens for the 'Enter' key (key code 13) on the message input field. 
+        When 'Enter' is pressed, it sends the message along with the username to the server 
+        and displays it in the chat. {% endcomment %}
         let messageInput = document.getElementById("messageInput")
         messageInput.addEventListener("keypress", (e) => {
             if (e.which === 13) {
@@ -55,14 +69,22 @@
                 messageInput.value = ""
             }
         });
-    
+
+        {% comment %} Listens for incoming messages from the server. If the message wasn't 
+        sent by the local user (as indicated by localMessageFlag), 
+        it displays the message. {% endcomment %}
         socket.on('message', (data) => {
             if (!localMessageFlag) {
                 displayMessage(data.text, new Date(), data.user);
             }
             localMessageFlag = false;
         });
-    
+
+        {% comment %} This function creates a new div element and this is where 
+        the username and the timestamp appears. {% endcomment %}
+        {% comment %} time stamp generator == timeElement.innerText = timestamp.toLocaleTimeString();{% endcomment %}
+        {% comment %} The last three lines of the function appends the message to ensure
+        that the most recent message appears at the bottom. {% endcomment %}
         function displayMessage(message, timestamp, user = "Server") {
             let messageElement = document.createElement("div");
             messageElement.classList.add("message");
