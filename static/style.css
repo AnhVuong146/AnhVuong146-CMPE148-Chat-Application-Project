@@ -1,0 +1,80 @@
+#usernameInputContainer {
+    text-align: center;
+    margin-top: 100px;
+}
+
+#usernameInput {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+#usernameSubmit {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('https://previews.123rf.com/images/vectorfusionart/vectorfusionart1712/vectorfusionart171200714/91436795-digital-composite-of-chat-bubble-app-icons-connected-and-dark-background.jpg') no-repeat center center fixed;
+    background-size: cover; 
+    color: #333;
+    margin: 0;
+    padding: 10px;
+}
+
+header {
+    font-family: 'Vina Sans', sans-serif;
+    text-align: center;
+    font-size: 6em; 
+    color: #ffffff; 
+    padding: 20px;
+    margin-bottom: -70px;
+    /* margin-top: 100px;  */
+}
+
+.messages {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Increased from 500px to 800px */
+    margin: 20px auto;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 300px;
+    flex-grow: 1;
+}
+
+.message {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+
+.timestamp {
+    color: #999;
+    font-size: 0.8em;
+}
+
+input#messageInput {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 82vh;
+}
+
+p {
+    color: #333;
+}
